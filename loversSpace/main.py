@@ -1,62 +1,119 @@
 ﻿# !/usr/bin/env python
 # -*- encoding: utf-8 -*-
 '''
-@File   :  main.py    
+@File   :  main.py
 @Desc   :  
 @Author :  ByFan
 @Time   :  2021/8/29 16:39 
 '''
 
+import time
 from airtest.core.api import *
+from operationEmail.main import sendEmail
+from loversSpace import MyException
+from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.schedulers.blocking import BlockingScheduler
+
 
 SystemType = "android"
 IP = "127.0.0.1"
 Port = "62001"
 
+"""
+自定义点击图标
+"""
+def myTouch(fileName,msg):
+    try:
+        element = exists(Template(fileName))
+        if element :
+            touch(element)
+            print("element==",element)
+            print(msg)
+            sleep(1)
+            return True
+        else:
+            sleep(1)
+            print('跳过'+msg)
+            return False
+    except Exception:
+        print(msg + '失败')
+        raise MyException(msg + '失败')
+        return False
+
+
+"""
+获取本地格式化时间
+"""
+def getLocalTime():
+    localTime = time.strftime("%Y-%m-%d %H:%M:%S",time.localtime())
+    return localTime
+
+"""
+空间打卡
+"""
+def zoneClockOn():
+    # 连接到手机
+    try:
+        try:
+            device = connect_device(SystemType + ":///" + IP + ":" + Port + "?cap_method=javacap&touch_method=adb")
+        except Exception:
+            print("连接手机失败")
+            raise MyException("连接手机失败")
+
+        stop_app("com.welove520.qqsweet")
+        print("关闭后台空间程序")
+
+        home()
+        print("返回Home页")
+        sleep(1)
+
+        if myTouch("images/loversSpace_logo.jpg","打开情侣空间"):
+            sleep(5)
+
+            skipAd = myTouch("images/skip.jpg","点击跳过广告")
+
+            closeGiftBag = myTouch("images/closeGiftBag.jpg","关闭领礼包页")
+
+            closeMiss = myTouch("images/closeMiss.jpg","关闭miss之后的弹窗")
+
+            miss = myTouch("images/missYou.jpg","点击每天想你")
+
+            closeMiss2 = myTouch("images/closeMiss.jpg","关闭miss之后的弹窗")
+
+            word = myTouch("images/world.jpg","进入小世界")
+            if word:
+                tree = myTouch("images/tree.jpg","进入爱情树")
+                if tree:
+
+                    authentication = myTouch("images/authentication.png","暂不实名认证")
+
+                    waterDrop = myTouch("images/waterDrop.jpg","进行浇水")
+
+                    # sun = myTouch("images/sun.jpg","进行晒太阳")
+                    sun = touch((91, 677))
+                    print("进行晒太阳")
+                    closeRecord = myTouch("images/closeRecord.jpg","关闭浇水记录页面")
+
+                    redHeart = myTouch("images/redHeart.jpg","收集爱心")
+                    if redHeart:
+                        receive = myTouch("images/receive.jpg","普通领取红心")
+            print("空间签到完成！")
+            msg = getLocalTime() + '签到成功!'
+            # 发送提醒邮件
+            sendEmail('空间签到',msg)
+
+            home()
+            print("返回Home页")
+    except (MyException , Exception) as e:
+        print("-------------------------------------------------------------------------------------------------------------")
+        print("Err==",e)
+        sendEmail('空间签到',e)
 
 if __name__ == "__main__":
     print("Hello Word!")
 
-    device = connect_device(SystemType + ":///" + IP + ":" + Port + "?cap_method=javacap&touch_method=adb")
-    print("返回Home页")
-    home()
-    loversSpace = exists(Template("images/loversSpace_logo.jpg"))
-    if loversSpace:
-        print("打开情侣空间")
-        touch(loversSpace)
-        sleep(10)
-        # skip = exists(Template("images/skip.jpg"))
-        # if skip:
-        #     touch(skip)
-        try:
-            cancel_1 = exists(Template("images/cancel.jpg"))
-        except Exception as e:
-            print("aaaaaaaaaa=",e)
-        if cancel_1:
-            print("点击×")
-            touch(cancel_1)
-            sleep(1)
-        try:
-            missYou = exists(Template("images/missYou.jpg"))
-            if missYou:
-                print("点击每天想你")
-                touch(missYou)
-                sleep(2)
-        except Exception as e:
-            print("bbbbbbbb=",e)
-        print("点击我们的小世界")
-        try:
-            world = exists(Template("images/world.jpg"))
-            print("world====",world)
-            touch(Template("images/world.jpg"))
-        except Exception as e:
-            print("cccccc=",e)
-
-
-
-    # touch(Template("images/tree.jpg"))
-    # touch(Template("images/waterDrop.jpg"))
-    #
-    # touch(Template("images/sun.jpg"))
-    #
-    # touch(Template("images/redHeart.jpg"))
+    # 开启定时任务
+    # scheduler = BlockingScheduler()
+    # scheduler.add_job(zoneClockOn(),'cron',hour=9, minute=30)
+    # scheduler.start()
+    zoneClockOn()

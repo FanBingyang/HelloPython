@@ -2,75 +2,101 @@
 # -*- encoding: utf-8 -*-
 '''
 @File   :  test.py    
-@Desc   :  
+@Time   :  2021/9/24 16:17 
 @Author :  ByFan
-@Time   :  2021/8/27 15:50 
 '''
-import datetime
-import random
-import time
-
-import pmod as pmod
 from airtest.core.api import *
+from airtest.core.android import Android
 
-""""
-把字符串时间转换成秒
-"""
-def time2seconds(t):
-    h,m,s = t.strip().split(":")
-    return int(h) * 3600 + int(m) * 60 + int(s)
+from workPlus.MyException import MyException
 
 """
-把秒转换成字符串时间
+自定义点击图标
 """
-def seconds2time(sec):
-    m,s = pmod(sec,60)
-    h,m = pmod(m,60)
-    return "%02d:%02d:%02d" % (h,m,s)
+def myTouch(fileName,msg):
+    try:
+        element = exists(Template(fileName))
+        if element :
+            touch(element)
+            print("element==",element)
+            print(msg)
+            sleep(1)
+            return True
+        else:
+            sleep(1)
+            print(msg + '失败')
+            return False
+    except Exception:
+        print(msg + '失败')
+        raise MyException(msg + '失败')
+        return False
 
 """
-根据两个时间点随机生成一个之间的时间
+上滑 返回手机主页
 """
-def randomTime(st,et):
-    sts = time2seconds(st)
-    ets = time2seconds(et)
-    rt = random.sample(range(sts,ets),1)
-    return seconds2time(rt)
-
-"""
-生成一个上班的随机时间
-"""
-def creatGoToWorkTime():
-    st = "08:50:00"
-    et = "09:10:00"
-    return randomTime(st,et)
-
-"""
-生成一个下班的随机时间
-"""
-def creatGoOffWorkTime():
-    st = "18:20:00"
-    et = "18:40:00"
-    return randomTime(st,et)
-
-
-
-if __name__ == "__main__":
-    print("Hello Word!")
-    # lt = time.localtime()
-    # ltstr = time.strftime("%H:%M:%S",lt)
-    # print(ltstr)
-    # st = "17:46:00"
-    # while(ltstr != st):
-    #     ltstr = time.strftime("%H:%M:%S",time.localtime())
-    # print(ltstr)
-
-    # init_device()
-    device_1 = connect_device('android:///127.0.0.1:62001?cap_method=javacap&touch_method=adb')
-    # touch(Template('workLogo.jpg'))
-    touch(Template('gaode.jpg'))
+def returnHome():
+    # 获取手机高度和宽度
+    width,height = device.get_current_resolution()
+    x1 = width * 0.5
+    y1 = height
+    y2 = height * 0.5
+    swipe([x1,y1],[x1,y2])
+    print("上滑 返回手机主页")
     sleep(1)
-    # # touch(Template('weizhi.jpg'))
-    # touch(Template('yingyong.jpg'))
-    # home()
 
+"""
+向左滑
+"""
+def leftSlide():
+    width, height = device.get_current_resolution()
+    x1 = width * 0.9
+    x2 = width * 0.2
+    y1 = height * 0.5
+    swipe([x1, y1], [x2, y1])
+    print("向左滑动")
+    sleep(1)
+
+if __name__ == '__main__':
+    print("Hello python!")
+
+    SystemType = "android"
+    IP = "192.168.111.185"
+    Port = "48887"
+    try:
+        device = connect_device(SystemType + ":///" + IP + ":" + Port + "?cap_method=javacap&touch_method=adb")
+
+        stop_app("com.foreverht.workplus.v4")
+
+        print("关闭后台workPlus程序")
+
+        home()
+        print("返回Home页")
+
+        qqMusic = myTouch("images/qqMusic.jpg","打开QQ音乐")
+        if qqMusic:
+            puTong = exists(Template("images/puTong.jpg"))
+            print("putong==",puTong)
+
+        # 返回手机主页
+        returnHome()
+        # 左滑 *2
+        leftSlide()
+        leftSlide()
+
+        workPlus = myTouch("images/workPlus_logo.jpg","打开workPlus")
+
+        if workPlus:
+            # yingYong = myTouch("images/yingYong.jpg", "打开应用页面")
+            # yingYong2 = myTouch("images/yingYong2.jpg","打开应用页面")
+            # kq = exists(Template("images/kaoQin.jpg"))
+            # if yingYong or yingYong2 or kq:
+            yingyong = touch((742, 2240))
+            kaoQin = myTouch("images/kaoQin.jpg", "进入考勤页面")
+            if kaoQin:
+                print("打卡成功")
+
+
+
+
+    except Exception:
+        print("连接手机失败")

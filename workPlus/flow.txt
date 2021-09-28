@@ -1,0 +1,20 @@
+﻿
+手机和电脑在同一wifi下
+数据线连接手机和电脑，shell执行一下操作
+# 打开端口
+adb tcpip 端口
+
+断开USB连接，手机上查看当前手机ip
+
+# 连接手机
+adb connect 手机IP:端口
+
+# 查看当前adb连接
+adb devices
+
+
+# 查看手机上所有app的包名
+adb shell pm list packages
+
+# workPlus包名
+package:com.foreverht.workplus.v4
