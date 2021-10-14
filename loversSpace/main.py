@@ -20,6 +20,18 @@ IP = "127.0.0.1"
 Port = "62001"
 
 """
+连接手机
+"""
+def connectPhone():
+    try:
+        device = connect_device(SystemType + ":///" + IP + ":" + Port + "?cap_method=javacap&touch_method=adb")
+    except Exception:
+        print("连接手机失败")
+        raise MyException("连接手机失败")
+    return device
+
+
+"""
 自定义点击图标
 """
 def myTouch(fileName,msg):
@@ -54,11 +66,7 @@ def getLocalTime():
 def zoneClockOn():
     # 连接到手机
     try:
-        try:
-            device = connect_device(SystemType + ":///" + IP + ":" + Port + "?cap_method=javacap&touch_method=adb")
-        except Exception:
-            print("连接手机失败")
-            raise MyException("连接手机失败")
+        device = connectPhone()
 
         stop_app("com.welove520.qqsweet")
         print("关闭后台空间程序")
@@ -89,9 +97,9 @@ def zoneClockOn():
 
                     waterDrop = myTouch("images/waterDrop.jpg","进行浇水")
 
-                    # sun = myTouch("images/sun.jpg","进行晒太阳")
-                    sun = touch((91, 677))
-                    print("进行晒太阳")
+                    sun = myTouch("images/sun.jpg","进行晒太阳")
+                    # sun = touch(589, 407)
+                    # print("进行晒太阳")
                     closeRecord = myTouch("images/closeRecord.jpg","关闭浇水记录页面")
 
                     redHeart = myTouch("images/redHeart.jpg","收集爱心")
@@ -113,7 +121,7 @@ if __name__ == "__main__":
     print("Hello Word!")
 
     # 开启定时任务
-    # scheduler = BlockingScheduler()
-    # scheduler.add_job(zoneClockOn(),'cron',hour=9, minute=30)
-    # scheduler.start()
-    zoneClockOn()
+    scheduler = BlockingScheduler()
+    scheduler.add_job(zoneClockOn(),'cron',hour=9, minute=30)
+    scheduler.start()
+    # zoneClockOn()
