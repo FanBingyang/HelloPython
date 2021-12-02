@@ -149,6 +149,7 @@ def writeImport(file):
                "import org.springframework.data.annotation.LastModifiedDate;\n",
                "import org.springframework.data.jpa.domain.support.AuditingEntityListener;\n\n",
                "import javax.persistence.*;\n",
+               "import java.io.Serializable;\n",
                "import java.util.Date;\n\n"]
     file.writelines(imports)
 
@@ -170,7 +171,7 @@ def writetClassName(file,list):
     table = '@Table(name = "'+ list[0] +'")\n'
     file.write(table)
     # 写入类名
-    clas = 'public class '+ list[3] +'Entity {\n\n'
+    clas = 'public class '+ list[3] +'Entity implements Serializable {\n\n'
     file.write(clas)
 
 """
