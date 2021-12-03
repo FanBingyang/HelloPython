@@ -34,8 +34,8 @@ def addImage(sender,receivers):
     return message
 
 """
-发送邮件到指定邮箱
-
+    发送邮件到指定邮箱
+    
     @param subject：邮件名
     @param msg：邮件内容
     @param receivers：收件人邮箱列表

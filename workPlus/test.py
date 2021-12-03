@@ -60,8 +60,10 @@ if __name__ == '__main__':
     print("Hello python!")
 
     SystemType = "android"
-    IP = "192.168.111.185"
-    Port = "48887"
+    # IP = "192.168.111.185"
+    # Port = "48887"
+    IP = "192.168.111.178"
+    Port = "55555"
     try:
         device = connect_device(SystemType + ":///" + IP + ":" + Port + "?cap_method=javacap&touch_method=adb")
 
