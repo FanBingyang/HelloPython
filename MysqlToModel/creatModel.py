@@ -1,7 +1,7 @@
 ﻿# !/usr/bin/env python
 # -*- encoding: utf-8 -*-
 '''
-@File   :  creatModel.py
+@File   :  createModel.py
 @Time   :  2021/9/18 16:10 
 @Author :  ByFan
 '''

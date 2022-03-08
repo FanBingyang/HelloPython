@@ -1,7 +1,7 @@
 ﻿# !/usr/bin/env python
 # -*- encoding: utf-8 -*-
 '''
-@File   :  test.py    
+@File   :  FieldProperties.py
 @Time   :  2021/9/24 16:17 
 @Author :  ByFan
 '''

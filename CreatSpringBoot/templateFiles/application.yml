@@ -1,0 +1,32 @@
+﻿server:
+  port: 9000
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://MYSQL_HOST:MYSQL_PORT/MYSQL_DATABASE?characterEncoding=MYSQL_CHARSET&serverTimezone=GMT%2B8   # 设置时区为东八区北京时间
+    username: MYSQL_USER
+    password: MYSQL_PWD
+  jpa:
+    show-sql: true
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate.format_sql: true
+  application:
+    name: SpringBootTemplate-server
+
+  # 配置静态资源地址
+  resources:
+    static-locations: classpath:/static/
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 100MB
+
+
+  # spring默认使用jackson解析包返回json，配置日期的返回方式，
+  jackson:
+    time-zone: GMT+8    # 配置时区，东八区
+    date-format: yyyy-MM-dd HH:mm:ss  # 默认返回时间格式

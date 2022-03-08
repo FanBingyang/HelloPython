@@ -88,7 +88,7 @@ voiceConfig = {
     'vol': 5,  # 音量，取值0 - 15，默认为5中音量
     'per': 4,  # 发音人选择, 0为女声，1为男声，3为情感合成 - 度逍遥，4为情感合成 - 度丫丫，默认为普通女
 }
-content = "啊啊啊啊啊啊啊啊啊啊~嗯哼~啊啊啊啊，我受不了了，好舒服啊，啊啊啊啊啊啊，爸爸操我，好舒服啊"
+content = "haha"
 file = Baymax.creatMP3(content,"test.mp3")
 playsound(file)
 
