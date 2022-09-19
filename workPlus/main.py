@@ -100,8 +100,9 @@ def myTouch(fileName,msg):
             print("element==",element)
             print(msg)
             sleep(1)
+            return True
         sleep(1)
-        return True
+        return False
     except Exception:
         print(msg + '失败')
         raise MyException(msg + '失败')
@@ -112,17 +113,36 @@ def myTouch(fileName,msg):
 """
 def goAttendancePage():
     device = connectPhone()
+    stop_app("com.foreverht.workplus.v4")
+    home()
     if myTouch("images/workLogo.jpg","点击进入WorkPlus"):
         print("打开workPlus")
         sleep(5)
+
+        if myTouch("images/input_pwd.png", "点击输入密码"):
+            text("Htgk123456", enter=False)
+            sleep(2)
+            myTouch("images/login.png", "点击登录")
 
         if myTouch("images/yingyong.jpg","点击进入应用"):
             print("点击进入应用")
             sleep(3)
 
-            if myTouch("images/kaoqin.jpg","点击进入移动考勤"):
-                print("点击进入移动考勤")
-                sleep(5)
+            print("点击进入移动考勤")
+            touch((75, 580))
+            # if myTouch("images/kaoqin.jpg","点击进入移动考勤"):
+            #     print("点击进入移动考勤")
+            #     sleep(5)
+            # else:
+            #     print('点击进入移动考勤失败')
+            #     raise MyException('点击进入移动考勤失败')
+        else:
+            print('点击进入应用失败')
+            raise MyException('点击进入应用失败')
+    else:
+        print('点击进入WorkPlus失败')
+        raise MyException('点击进入WorkPlus失败')
+
 
 
 
@@ -136,18 +156,18 @@ def goToClockOn():
         reLocation = exists(Template("images/reLocation.png"))
         i = 10
         while reLocation and i > 0:
-            myTouch("images/reLocation_touch.png", "点击重新定位")
+            myTouch("images/reLocation_touch.png", "点击重新定位" + str(i) + "次")
             sleep(2)
             i=i-1
             reLocation = exists(Template("images/reLocation.png"))
-        myTouch("images/goOffClockOn.png", "点击上班打卡")
-        # print("点击上班打卡")
+        # myTouch("images/goOffClockOn.png", "点击上班打卡")
+        print("点击上班打卡")
         sleep(2)
         goToClockOn_success = exists(Template("images/goToClockOn_success.png"))
         if goToClockOn_success:
-            sendEmail(getLocalTime() + "\t上班打卡成功")
+            sendEmail("上班打卡",getLocalTime() + "\t上班打卡成功")
         else:
-            sendEmail(getLocalTime() + "\t上班打卡失败")
+            sendEmail("上班打卡",getLocalTime() + "\t上班打卡失败")
     except (MyException, Exception) as e:
         print("------------------------------------------------------------------------------")
         print("Err==", e)
@@ -163,7 +183,7 @@ def goOffClockOn():
     try:
         goAttendancePage()
         reLocation = exists(Template("images/reLocation.png"))
-        i = 10;
+        i = 10
         while reLocation and i > 0:
             myTouch("images/reLocation_touch.png","点击重新定位")
             sleep(2)
@@ -173,9 +193,9 @@ def goOffClockOn():
         print("点击下班打卡")
         # goOffClockOn_success = exists(Template("images/"))
         # if goOffClockOn_success:
-        sendEmail(getLocalTime() + "\t下班打卡成功")
+        sendEmail("下班打卡",getLocalTime() + "\t下班打卡成功")
         # else:
-        #     sendEmail(getLocalTime() + "\t下班打卡失败")
+        #     sendEmail("下班打卡",getLocalTime() + "\t下班打卡失败")
     except (MyException, Exception) as e:
         print("------------------------------------------------------------------------------")
         print("Err==", e)
@@ -228,14 +248,14 @@ def sendEmail(subject, msg, receivers=['end_byfan@163.com']):
     mail_pwd = 'NDPOIQABMUJMJLND'  # 发送者邮箱的SMTP授权码
 
     sender = 'f18739427290@163.com'  # 发送者邮箱
-    receivers = ['end_byfan@163.com']           # 接收者邮箱列表
+    # receivers = ['end_byfan@163.com']           # 接收者邮箱列表
 
     # 三个参数：第一个为文本内容，第二个 plain 设置文本格式(也有html)，第三个 utf-8 设置编码
     message = MIMEText(msg, 'plain', 'utf-8')
 
     message['Subject'] = subject  # 设置邮件标题
     message['From'] = sender  # 设置发送人
-    message['To'] = receivers       # 设置接收者
+    # message['To'] = receivers       # 设置接收者
 
     try:
         smtpObj = smtplib.SMTP()
@@ -256,26 +276,45 @@ def sendEmail(subject, msg, receivers=['end_byfan@163.com']):
 
 if __name__ == "__main__":
     print("Hello Word!")
-
-    # init_device()
-    # device_1 = connect_device('android:///127.0.0.1:62001?cap_method=javacap&touch_method=adb')
-    # touch(Template('workLogo.jpg'))
-    # touch(Template('gaode.jpg'))
-    # sleep(1)
-    # # touch(Template('kaoqin.jpg'))
-    # touch(Template('yingYong.jpg'))
-    # home()
+    # goAttendancePage()
+    # goToClockOn()
 
     device = connectPhone()
-    myTouch("images/workLogo.jpg","点击进入workPlus")
-    home()
+    # home()
+    xiaban = exists(Template("images/xiabandak.jpg"))
+    print("xiaban==",xiaban)
+    reloca = exists(Template("images/reLocation.png"))
+    print("reloca==",reloca)
+    inpu = exists(Template("images/reLocation_touch.png"))
+    i = 0
+    while inpu and i < 10:
+        print(str(i)+": inpu=",inpu)
+        myTouch("images/reLocation_touch.png", "点击重修定位")
+        sleep(3)
+        i=i+1
+        inpu = exists(Template("images/reLocation_touch.png"))
+    print("==end==",i,": inpu=",inpu)
 
-    print(creatGoToWorkTime())
+
+    # myTouch("images/input_pwd.png","点击输入密码")
+    # text("Htgk123456", enter=False)
+    # myTouch("images/login.png","点击登录")
+    # myTouch("images/yingyong.jpg","点击进入应用")
+    # myTouch("images/kaoqin.jpg", "点击进入移动考勤")
+    # element = exists(Template(75,580))
+    # if element:
+    # print("点击75，580")
+    # touch((75,580))
+    # goOffClockOn()
+    # sleep(5)
+    # home()
+
+    # print(creatGoToWorkTime())
 
     # # 开启定时任务
     # scheduler = BlockingScheduler()
     # # 定时上班打卡
-    # scheduler.add_job(goToWork(), 'cron', hour=9, minute=40)
+    # scheduler.add_job(goToWork(), 'cron', hour=8, minute=40)
     # # 定时下班打卡
     # scheduler.add_job(goOffWork(),'cron', hour=18,minute=15)
     # scheduler.start()
