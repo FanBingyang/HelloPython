@@ -11,10 +11,6 @@ from os import listdir
 from PIL import Image
 import shutil
 
-if __name__ == "__main__":
-    # 快看漫画《我不喜欢这世界，我只喜欢你》
-    url = "https://www.kuaikanmanhua.com/web/topic/2390/"
-    loadPage(url)
 
 # 定义全局变量，临时文件夹路径
 PATH = "G:\\temp\\"
@@ -115,4 +111,7 @@ def writeImage(link,filename):
     with open(PATH + filename + ".jpg", "wb") as f:
         f.write(img)
 
-
+if __name__ == "__main__":
+    # 快看漫画《我不喜欢这世界，我只喜欢你》
+    url = "https://www.kuaikanmanhua.com/web/topic/2390/"
+    loadPage(url)

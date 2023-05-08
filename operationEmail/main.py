@@ -96,6 +96,7 @@ if __name__ == '__main__':
     # operationEmail()
 
     # getEmail()
+    sendEmail("Test","测试邮件发送")
 
     sendEmail("测试","啊哈哈哈")
     print(getLocalTime())

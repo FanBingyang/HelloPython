@@ -30,17 +30,19 @@ if __name__ == "__main__":
     # 1、输入项目信息
     # projectPath = input("输入项目路径：")
     # packageName = input("输入包名：")
-    projectPath = "/Users/fby/IdeaProjects/SpringBootTemplate"
-    packageName = "com.byfan.springboottemplate"
+    projectPath = "/Users/fby/IdeaProjects/SubsidizeSystem"
+    packageName = "com.byfan.subsidizesystem"
 
     # 2、读取数据库配置
     mysql_config_file_name = "config/mysql_config.json"
-    mysql_config_file =  open(mysql_config_file_name, 'r', encoding="utf_8_sig")
+    mysql_config_file = open(mysql_config_file_name, 'r', encoding="utf_8_sig")
     mysql_json_data = json.load(mysql_config_file)
     mysqlConf = mysqlConfig(mysql_json_data['MYSQL_HOST'], mysql_json_data['MYSQL_PORT'], mysql_json_data['MYSQL_USER'], mysql_json_data['MYSQL_PWD'], mysql_json_data['MYSQL_DATABASE'], mysql_json_data['MYSQL_CHARSET'])
 
     # 3、提取数据库表结构
     sqlDir = "sql"
+    # 删除产生的临时sql文件
+    # handleSql.deleteSqlFiles(sqlDir)
     db = DBTool(mysqlConf)
     db.exportMysql(sqlDir)
     object_list = handleSql.getObjectList(sqlDir)
@@ -53,19 +55,21 @@ if __name__ == "__main__":
     # 7、创建controller层
     createController.writeController(projectPath, packageName,sqlDir)
     # 8、创建common层
-    createCommon.writeCommon(projectPath, packageName)
+    # createCommon.writeCommon(projectPath, packageName)
     # 9、创建config/Knife4jConfig层
-    createKnife4jConfig.writeSwagger(projectPath, packageName)
+    # createKnife4jConfig.writeSwagger(projectPath, packageName)
     # 10、创建exception层
-    createException.writeExcept(projectPath, packageName)
+    # createException.writeExcept(projectPath, packageName)
     # 11、修改启动类Application
-    modifApplication.modifyApplication(projectPath,packageName)
+    # modifApplication.modifyApplication(projectPath,packageName)
     # 13、创建application.yml
-    createApplicationYml.writeApplicationYml(projectPath, mysqlConf)
+    # createApplicationYml.writeApplicationYml(projectPath, mysqlConf)
     # 14、修改pom.xml
-    modifPomXml.updatePom(projectPath)
-    print("end")
+    # modifPomXml.updatePom(projectPath)
+
+    # 删除产生的临时sql文件
     # handleSql.deleteSqlFiles(sqlDir)
+    print("end")
 
 
 
